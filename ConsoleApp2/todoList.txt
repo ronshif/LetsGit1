@@ -1,0 +1,23 @@
+﻿--------------------
+Todo
+Refactor current code
+Add code to gitHub
+Read from file
+Take the structure of file from Kais 
+Read from file method. 
+Add transaction fees
+
+
+Priroity1
+-------------
+
+
+Priority2
+-------------
+
+
+Phases
+-------------
+FirstPhase - 
+Get to a situation that we have some default DB and we can test algorithms on it.
+
