@@ -7,6 +7,10 @@ namespace SmartCoin
     {
         static void Main(string[] args)
         {
+            Runner run = new Runner();
+            IAlgorithm ripple = new RippleAlgorithm();
+            run.RunnerSimulation(ripple);
+
         }
 
    

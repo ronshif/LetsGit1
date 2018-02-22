@@ -10,7 +10,7 @@ namespace SmartCoin
         List<CoinInfo> binanceRipple;
 
         private List<SiteName> sitesOfInterest = new List<SiteName>() { SiteName.Binance, SiteName.BitFinex };
-        private List<CoinName> coinsOfInterest = new List<CoinName>() { CoinName.Bitcoin, CoinName.Ripple,CoinName.USD };
+        private List<CoinName> coinsOfInterest = new List<CoinName>() { CoinName.Bitcoin, CoinName.Ripple };
 
         public List<SiteName> SitesOfInterest { get => sitesOfInterest; set => sitesOfInterest = value; }
         public List<CoinName> CoinsOfinterest { get => coinsOfInterest; set => coinsOfInterest = value; }
