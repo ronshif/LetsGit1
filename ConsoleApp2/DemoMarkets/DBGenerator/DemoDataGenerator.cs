@@ -21,9 +21,9 @@ namespace SmartCoin
                 {
                     FullCoinData coinData = new FullCoinData();
                     List<CoinInfo> generatedCoins = GenerateCoins(startingCoin.Value, data.Amount,data.IntervalInSeconds,data.FirstDate);
-                    coinData.coinHistory = generatedCoins;
-                    coinData.coinName = startingCoin.Key;
-                    fullConsData.Add(coinData.coinName, coinData);
+                    coinData.CoinHistory = generatedCoins;
+                    coinData.CoinName = startingCoin.Key;
+                    fullConsData.Add(coinData.CoinName, coinData);
                 }
 
                 var coinsOfInterest = data.StartingCoinsValues.Select(x => x.Value.coinType).ToList();
@@ -37,13 +37,13 @@ namespace SmartCoin
 
         private  List<CoinInfo> GenerateCoins(CoinInfo startingCoin, int amount, int intervalInSeconds, DateTime firstDate)
         {
-            var coinType = startingCoin.coinType;
             Random rnd = new Random(1);
             Random rnd2 = new Random(2);
             double lastVal = startingCoin.val;
 
             List<CoinInfo> list = new List<CoinInfo>();
             list.Add(startingCoin);
+            
             for (int i = 0; i < amount; i++)
             {
                 double change = rnd.NextDouble();
@@ -51,7 +51,7 @@ namespace SmartCoin
                 change = ((change * direction) + 100) / 100;
                 double newVal = lastVal * change;
 
-                var newCoin = new CoinInfo(startingCoin.coinType, firstDate.AddSeconds(intervalInSeconds*i), newVal, startingCoin.site);
+                var newCoin = new CoinInfo(startingCoin.coinType, firstDate.AddSeconds(intervalInSeconds*i), newVal);
                 list.Add(newCoin);
                 lastVal = newVal;
             }

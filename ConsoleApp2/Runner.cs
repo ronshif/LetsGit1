@@ -9,15 +9,19 @@ namespace SmartCoin
         public void RunnerSimulation(IAlgorithm algorithm)
         {
             ExchangesServicesSimulator exchangesServicesSimulator = new ExchangesServicesSimulator();
+            exchangesServicesSimulator.PrintAllData();
+            return;
             ISitesManager sitesManager = new SitesManager(exchangesServicesSimulator);
-            sitesManager.Init(algorithm);
+            sitesManager.Init(algorithm.SitesOfInterest,algorithm.CoinsOfinterest);
+            algorithm.AllSitesManager = sitesManager;
 
-           
             DateTime currentTime = exchangesServicesSimulator.FirstDate;
-
-            while (currentTime< exchangesServicesSimulator.LastDate)
+            int step = 0;
+            int maxSteps = 20;
+            while (currentTime< exchangesServicesSimulator.LastDate && step++< maxSteps)
             {
                 exchangesServicesSimulator.CurrentTime = currentTime;
+                Console.WriteLine(currentTime + algorithm.GetRelevantDataForOutput());
                 EvaluateAlgorithmLogic(sitesManager, algorithm);
                 currentTime = currentTime.AddSeconds(exchangesServicesSimulator.Intervals);
             }
@@ -28,7 +32,10 @@ namespace SmartCoin
             sitesManager.CheckForUpdates();
             BitAction recommendedAction = algorithm.GetRecommendedAction();
             sitesManager.DoBitAction(recommendedAction);
-            sitesManager.PrintCurrentState();
+            if (recommendedAction.Action != BitActionType.Nothing)
+            {
+                Console.WriteLine(algorithm.GetRecommendedAction());
+            }
         }
 
         public void RunnerReal(IAlgorithm algorithm, int steps)
@@ -36,10 +43,9 @@ namespace SmartCoin
             IExchangeServices services = new ExchangesServices();
             ISitesManager sitesManager = new SitesManager(services);
 
-            sitesManager.Init(algorithm); 
+            sitesManager.Init(algorithm.SitesOfInterest, algorithm.CoinsOfinterest); 
 
-            bool keepRunning = true;
-            while (keepRunning)
+            while (true)
             {
                 EvaluateAlgorithmLogic(sitesManager, algorithm);
             }

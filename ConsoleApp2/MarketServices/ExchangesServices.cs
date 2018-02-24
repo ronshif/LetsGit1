@@ -15,6 +15,16 @@ namespace SmartCoin
            //call method on api
         }
 
+        public Dictionary<SiteName, Dictionary<CoinName, double>> GetCurrentAmounts(List<SiteName> sitesOfInterest, List<CoinName> coinsOfInterest)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetCurrentAmounts(SiteName siteName, CoinName coinName)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DoCoinAction(SiteName site, CoinName coinName, BitActionType buy, double amountOfCoins)
         {
             throw new NotImplementedException();

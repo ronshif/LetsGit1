@@ -36,7 +36,7 @@ namespace SmartCoin
                 var siteName = x.Key.Key;
                 var coinName = x.Key.Value;
                 var amount = x.Value;
-                generatedDB[siteName].Coins[coinName].amountOfCoins = amount;
+                generatedDB[siteName].Coins[coinName].AmountOfCoins = amount;
             }
 
             demoSitesManager = new SitesManager() { Sites = generatedDB };
@@ -54,8 +54,8 @@ namespace SmartCoin
             dbRequirements.SupportedSites = new List<SiteName>() { SiteName.Binance, SiteName.BitFinex };
             dbRequirements.StartingCoinsValues = new Dictionary<CoinName, CoinInfo>()
             {
-                {CoinName.Bitcoin, new CoinInfo(){coinType= CoinName.Bitcoin} },
-                {CoinName.Ripple, new CoinInfo(){coinType= CoinName.Ripple} },
+                {CoinName.Bitcoin, new CoinInfo(){coinType= CoinName.Bitcoin, val = 10000} },
+                {CoinName.Ripple, new CoinInfo(){coinType= CoinName.Ripple, val = 1} },
             };
             dbRequirements.SetAmountToGenreate(DateTime.Now.Subtract(new TimeSpan(3, 0, 0)), DateTime.Now.AddHours(24), 5);
             dbRequirements.InitialCoinAmounts = new Dictionary<KeyValuePair<SiteName, CoinName>, double>()
@@ -69,6 +69,17 @@ namespace SmartCoin
         #endregion
 
         #region Actions
+
+        public double GetCurrentAmounts(SiteName siteName, CoinName coinName)
+        {
+            return this.DemoSitesManager.Sites[siteName].GetCoinFullData(coinName).AmountOfCoins;
+        }
+
+        public Dictionary<SiteName, Dictionary<CoinName, double>> GetCurrentAmounts(List<SiteName> sitesOfInterest, List<CoinName> coinsOfInterest)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DoCoinAction(SiteName siteName, CoinName coinName, BitActionType action, double amountOfCoins)
         {
             return true;
@@ -116,7 +127,10 @@ namespace SmartCoin
             return allCoins;
         }
 
-        
+        public void PrintAllData()
+        {
+            this.DemoSitesManager.PrintAllData();
+        }
 
         #endregion
     }

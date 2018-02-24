@@ -8,11 +8,8 @@ namespace SmartCoin
         static void Main(string[] args)
         {
             Runner run = new Runner();
-            IAlgorithm ripple = new RippleAlgorithm();
+            IAlgorithm ripple = new RandomAlgorithm();
             run.RunnerSimulation(ripple);
-
         }
-
-   
     }
 }

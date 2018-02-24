@@ -4,22 +4,19 @@ using System.Linq;
 
 namespace SmartCoin
 {
+    /// <summary>
+    /// 1. simple algorithm, checks if we grew by 2 percentage in 30 seconds  - buy.
+    /// </summary>
     public class RippleAlgorithm:IAlgorithm
     {
-        List<CoinInfo> bitFinexRipple;
-        List<CoinInfo> binanceRipple;
-
-        private List<SiteName> sitesOfInterest = new List<SiteName>() { SiteName.Binance, SiteName.BitFinex };
-        private List<CoinName> coinsOfInterest = new List<CoinName>() { CoinName.Bitcoin, CoinName.Ripple };
-
-        public List<SiteName> SitesOfInterest { get => sitesOfInterest; set => sitesOfInterest = value; }
-        public List<CoinName> CoinsOfinterest { get => coinsOfInterest; set => coinsOfInterest = value; }
+        public List<SiteName> SitesOfInterest { get; set; } = new List<SiteName>() { SiteName.Binance, SiteName.BitFinex };
+        public List<CoinName> CoinsOfinterest { get; set; } = new List<CoinName>() { CoinName.Bitcoin, CoinName.Ripple };
 
         public BitAction GetRecommendedAction()
         {
-            return new BitAction(BitActionType.Buy, SiteName.BitFinex, double.MaxValue);
+           // return new BitAction(BitActionType.Buy, SiteName.BitFinex, double.MaxValue);
             
-            /*
+            
             double last30SecondsBinance = GetLast30SecondsBinanceTendention(DateTime.Now);
             if (last30SecondsBinance > 1)
             {
@@ -32,16 +29,25 @@ namespace SmartCoin
             else
             {
                 return null;
-            }*/
+            }
         }
+
+        public string GetRelevantDataForOutput()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ISitesManager AllSitesManager { get; set; }
 
         private double GetLast30SecondsBinanceTendention(DateTime currTime)
         {
-            var subList = binanceRipple.Where(coin => currTime.Subtract(coin.date).TotalSeconds < 30);
+           /* var subList = binanceRipple.Where(coin => currTime.Subtract(coin.date).TotalSeconds < 30);
             var first = subList.First();
             var last = subList.Last();
             double d = (last.val / first.val - 1) * 100;
-            return d;
+            return d;*/
+            return 0;
         }
 
   

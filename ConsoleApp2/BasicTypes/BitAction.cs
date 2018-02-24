@@ -20,5 +20,10 @@
         }
         public BitAction()
         { }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1} {2} Amount:{3} ", Action, Site, CoinName,Amount == double.MaxValue?"All":Amount.ToString());
+        }
     }
 }

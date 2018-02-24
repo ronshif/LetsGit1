@@ -10,27 +10,14 @@ namespace SmartCoin
     /// </summary>
     public class SitesManager : ISitesManager
     {
-        private Dictionary<SiteName, ExchangeSite> sites = new Dictionary<SiteName, ExchangeSite>();
+        public Dictionary<SiteName, ExchangeSite> Sites { get; set; } = new Dictionary<SiteName, ExchangeSite>();
 
         private readonly IExchangeServices exchangeServices;
         private List<SiteName> sitesOfInterest;
         private List<CoinName> coinsOfInterest;
-       // private DateTime currentTime;
 
-
-        #region Properties
-        public ExchangeSite Binance { get => sites[SiteName.Binance]; }
-        public ExchangeSite Bitfinex => sites[SiteName.BitFinex];
-
-        public Dictionary<SiteName, ExchangeSite> Sites { get => sites; set => sites = value; }
-
-        public ExchangeSite GetExchangeSite(SiteName siteName)
-        {
-            return sites[siteName];
-        }
-        #endregion
-
-        #region Ctrs and Initializators
+        public ExchangeSite Binance => Sites[SiteName.Binance];
+        public ExchangeSite Bitfinex => Sites[SiteName.BitFinex];
 
         public SitesManager()
         {
@@ -40,14 +27,6 @@ namespace SmartCoin
         {
             this.exchangeServices = exchangeServices;
         }
-
-        /// <summary>
-        /// Generate X number of coins, starting from initial coin, with intervals of one second
-        /// </summary>
-        /// <param name="startingCoin"></param>
-        /// <param name="numberOfCoinsToGenerate"></param>
-        /// <returns></returns>
-        public void Init(IAlgorithm algorithm) => Init(algorithm.SitesOfInterest, algorithm.CoinsOfinterest);
 
         /// <summary>
         /// Generate X number of coins, starting from initial coin, with intervals of one second
@@ -68,26 +47,26 @@ namespace SmartCoin
                 ExchangeSite site = new ExchangeSite(siteName, this.exchangeServices,coinsOfInterest);
                 foreach (CoinName coinName in coinsOfInterest)
                 {
-                    site.Coins[coinName].coinHistory = coinsHistory[siteName][coinName];
-                    site.Coins[coinName].amountOfCoins = currentCoinsState[siteName][coinName].amountAtTheTime;
+                    site.Coins[coinName].CoinHistory = coinsHistory[siteName][coinName];
+
+                    site.Coins[coinName].AmountOfCoins = exchangeServices.GetCurrentAmounts(siteName, coinName);
                 }
                 Sites.Add(siteName, site);
             }
         }
-        #endregion
+
+        public ExchangeSite GetExchangeSite(SiteName siteName)
+        {
+            return Sites[siteName];
+        }
 
         public void CheckForUpdates()
         {
             Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> currentCoins = exchangeServices.GetCurrentCoinsState(sitesOfInterest, coinsOfInterest);
             foreach (SiteName siteName in sitesOfInterest)
             {
-               sites[siteName].UpdateCoins(currentCoins[siteName]);
+               Sites[siteName].UpdateCoins(currentCoins[siteName]);
             }
-        }
-
-        public void PrintCurrentState()
-        {
-            Console.WriteLine("woohooo");
         }
 
         public void DoBitAction(BitAction recommendedAction)
@@ -97,10 +76,17 @@ namespace SmartCoin
                 return;
             }
 
-            var site = this.sites[recommendedAction.Site];
+            var site = this.Sites[recommendedAction.Site];
 
             site.ExecuteAction(recommendedAction);
+        }
 
+        public void PrintAllData()
+        {
+            foreach (var pair in Sites)
+            {
+                pair.Value.PrintAllData();
+            }
         }
     }
 }
