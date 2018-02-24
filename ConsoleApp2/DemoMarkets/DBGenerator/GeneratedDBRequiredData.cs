@@ -11,7 +11,8 @@ namespace SmartCoin
 
         private int intervalInSeconds;
         private int amount;
-        private DateTime firstDate;
+        public DateTime firstDate;
+        public DateTime LastDate { get; set; }
 
         public int IntervalInSeconds { get => intervalInSeconds; }
         public int Amount { get => amount;}
@@ -27,6 +28,7 @@ namespace SmartCoin
             this.firstDate = firstDate;
             this.amount = amount;
             this.intervalInSeconds = intervalInSeconds;
+            this.LastDate = firstDate.AddSeconds(intervalInSeconds * amount);
         }
 
         public void SetAmountToGenreate(DateTime firstDate, DateTime lastDate, int intervalInSeconds)
@@ -37,7 +39,8 @@ namespace SmartCoin
             this.intervalInSeconds = intervalInSeconds;
 
             double totalSeconds =lastDate.Subtract(firstDate).TotalSeconds;
-            this.amount = (int)totalSeconds/IntervalInSeconds;
+            amount = (int)totalSeconds/IntervalInSeconds;
+            LastDate = lastDate;
         }
 
 

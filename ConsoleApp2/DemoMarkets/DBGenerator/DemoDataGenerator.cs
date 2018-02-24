@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace SmartCoin
 {
@@ -14,18 +15,20 @@ namespace SmartCoin
             Dictionary<SiteName, ExchangeSite> sites = new Dictionary<SiteName, ExchangeSite>();
             foreach (var siteName in data.SupportedSites)
             {
-                Dictionary<CoinName, FullCoinData> d = new Dictionary<CoinName, FullCoinData>();
+                Dictionary<CoinName, FullCoinData> fullConsData = new Dictionary<CoinName, FullCoinData>();
+                
                 foreach (var startingCoin in data.StartingCoinsValues)
                 {
                     FullCoinData coinData = new FullCoinData();
                     List<CoinInfo> generatedCoins = GenerateCoins(startingCoin.Value, data.Amount,data.IntervalInSeconds,data.FirstDate);
                     coinData.coinHistory = generatedCoins;
                     coinData.coinName = startingCoin.Key;
-                    d.Add(coinData.coinName, coinData);
+                    fullConsData.Add(coinData.coinName, coinData);
                 }
 
-                ExchangeSite site = new ExchangeSite(siteName, null);
-                site.Coins = d;
+                var coinsOfInterest = data.StartingCoinsValues.Select(x => x.Value.coinType).ToList();
+                ExchangeSite site = new ExchangeSite(siteName, null, coinsOfInterest);
+                site.Coins = fullConsData;
                 sites.Add(siteName, site);
             }
 

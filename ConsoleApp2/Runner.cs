@@ -12,12 +12,14 @@ namespace SmartCoin
             ISitesManager sitesManager = new SitesManager(exchangesServicesSimulator);
             sitesManager.Init(algorithm);
 
-            int maxSteps=300;
-            for (int i = 0; i < maxSteps; i++)
-            {
-                exchangesServicesSimulator.CurrentTime = exchangesServicesSimulator.CurrentTime.AddSeconds(1);
-                EvaluateAlgorithmLogic(sitesManager, algorithm);
+           
+            DateTime currentTime = exchangesServicesSimulator.FirstDate;
 
+            while (currentTime< exchangesServicesSimulator.LastDate)
+            {
+                exchangesServicesSimulator.CurrentTime = currentTime;
+                EvaluateAlgorithmLogic(sitesManager, algorithm);
+                currentTime = currentTime.AddSeconds(exchangesServicesSimulator.Intervals);
             }
         }
 
@@ -34,7 +36,7 @@ namespace SmartCoin
             IExchangeServices services = new ExchangesServices();
             ISitesManager sitesManager = new SitesManager(services);
 
-            sitesManager.Init(algorithm); //sitesOfInterest, coinsOfInterest);
+            sitesManager.Init(algorithm); 
 
             bool keepRunning = true;
             while (keepRunning)
@@ -42,7 +44,5 @@ namespace SmartCoin
                 EvaluateAlgorithmLogic(sitesManager, algorithm);
             }
         }
-     
-
     }
 }

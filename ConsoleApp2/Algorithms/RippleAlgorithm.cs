@@ -17,6 +17,9 @@ namespace SmartCoin
 
         public BitAction GetRecommendedAction()
         {
+            return new BitAction(BitActionType.Buy, SiteName.BitFinex, double.MaxValue);
+            
+            /*
             double last30SecondsBinance = GetLast30SecondsBinanceTendention(DateTime.Now);
             if (last30SecondsBinance > 1)
             {
@@ -29,7 +32,7 @@ namespace SmartCoin
             else
             {
                 return null;
-            }
+            }*/
         }
 
         private double GetLast30SecondsBinanceTendention(DateTime currTime)

@@ -22,10 +22,16 @@ namespace SmartCoin
         }
 
 
-        public ExchangeSite(SiteName site, IExchangeServices exchangeServices)
+        public ExchangeSite(SiteName site, IExchangeServices exchangeServices,List<CoinName> coinsOfInterest)
         {
             this.Site = site;
             this.exchangeServices = exchangeServices;
+            Coins = new Dictionary<CoinName, FullCoinData>();
+            foreach(var coinName in coinsOfInterest)
+            {
+                Coins[coinName] = new FullCoinData() { coinName = coinName };
+            }
+            Coins[CoinName.USD] = new FullCoinData() { coinName = CoinName.USD };
         }
 
         internal void UpdateCoins(Dictionary<CoinName, CoinInfo> latestCoinsState)

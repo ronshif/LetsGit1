@@ -10,6 +10,10 @@ namespace SmartCoin
     {
         private SitesManager demoSitesManager;
         private DateTime currentTimeSimulation; //Simulates the current time.
+        public DateTime FirstDate { get; set; }
+        public DateTime LastDate { get; set; }
+        public int Intervals { get; set; }
+
 
         public SitesManager DemoSitesManager { get => demoSitesManager; set => demoSitesManager = value; }
         public DateTime CurrentTime { get => currentTimeSimulation; set => currentTimeSimulation = value; }
@@ -36,6 +40,11 @@ namespace SmartCoin
             }
 
             demoSitesManager = new SitesManager() { Sites = generatedDB };
+            CurrentTime = generatedDBRequirements.FirstDate;
+            FirstDate = generatedDBRequirements.FirstDate;
+            LastDate = generatedDBRequirements.LastDate;
+            Intervals = generatedDBRequirements.IntervalInSeconds;
+            
         }
 
         private GeneratedDBRequiredData GetDefaultDBRequirements()
@@ -92,19 +101,19 @@ namespace SmartCoin
 
         public Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> GetCurrentCoinsState(List<SiteName> sitesOfInterest, List<CoinName> coinsOfInterest)
         {
-            Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> mainDic = new Dictionary<SiteName, Dictionary<CoinName, CoinInfo>>();
-            foreach (SiteName site in sitesOfInterest)
+            Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> allCoins = new Dictionary<SiteName, Dictionary<CoinName, CoinInfo>>();
+            foreach (SiteName siteName in sitesOfInterest)
             {
-                var site1 = demoSitesManager.GetExchangeSite(site);
-                Dictionary<CoinName, CoinInfo> dic = new Dictionary<CoinName, CoinInfo>();
-                foreach (CoinName coin in coinsOfInterest)
+                var site = demoSitesManager.GetExchangeSite(siteName);
+                Dictionary<CoinName, CoinInfo> coinsOfOneSite = new Dictionary<CoinName, CoinInfo>();
+                foreach (CoinName coinName in coinsOfInterest)
                 {
-                    CoinInfo coinInfo = site1.GetCoinFullData(coin).GetCoinAtTime(currentTimeSimulation);
-                    dic[coin] = coinInfo;
+                    CoinInfo coinInfo = site.Coins[coinName].GetCoinAtTime(currentTimeSimulation);
+                    coinsOfOneSite[coinName] = coinInfo;
                 }
-                mainDic[site] = dic;
+                allCoins[siteName] = coinsOfOneSite;
             }
-            return mainDic;
+            return allCoins;
         }
 
         

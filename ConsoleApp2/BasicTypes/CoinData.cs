@@ -23,8 +23,16 @@ namespace SmartCoin
 
         public CoinInfo GetCoinAtTime(DateTime dateTime)
         {
-            var x = coinHistory.Where(coinInfo =>  Math.Abs(coinInfo.date.Subtract(dateTime).TotalSeconds) <1);
-            return x.FirstOrDefault();
+            for (int i = 1; i < coinHistory.Count; i++)
+            {
+                if (coinHistory[i].date > dateTime)
+                {
+                    return coinHistory[i - 1];
+                }
+            }
+
+            return null;
+
         }
 
         public List<CoinInfo> GetCoinHistory(DateTime from,DateTime to)
