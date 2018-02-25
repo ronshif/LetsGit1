@@ -50,24 +50,20 @@ namespace SmartCoin
             FullCoinData coinData =  this.Coins[recommendedAction.CoinName];
             FullCoinData usdCoinData = this.Coins[CoinName.USD];
 
-            if (recommendedAction.Action == BitActionType.Buy )
+            Console.WriteLine("*********************************************Do action *************************************");
+            Console.WriteLine(recommendedAction);
+
+            bool succeeded = exchangeServices.DoCoinAction(this.Name, recommendedAction.CoinName, recommendedAction.Action, recommendedAction.Amount, out var newCoinAmount, out var newUsdAmount);
+            if (succeeded)
             {
-                if (usdCoinData.AmountOfCoins <= 0)
-                {
-                    Console.WriteLine("can't buy coins - no money");
-                    return;
-                }
-                exchangeServices.DoCoinAction(this.Name, recommendedAction.CoinName,BitActionType.Buy, usdCoinData.AmountOfCoins);
+                coinData.AmountOfCoins = newCoinAmount;
+                usdCoinData.AmountOfCoins = newUsdAmount;
+                Console.WriteLine("SiteManager: SUCCEEDED ! ");
             }
-            if (recommendedAction.Action == BitActionType.Sell)
-            {
-                if (coinData.AmountOfCoins <= 0)
-                {
-                    Console.WriteLine("can't sell coins - no coins");
-                    return;
-                }
-                exchangeServices.DoCoinAction(this.Name,recommendedAction.CoinName,BitActionType.Sell, coinData.AmountOfCoins);
-            }
+
+            Console.WriteLine("*******************************************************************************************");
+
+
         }
 
         public string GetCoinsState()
@@ -79,10 +75,11 @@ namespace SmartCoin
                 var lastValue = coinDate.GetLastCoinValue();
                 var amount = coinDate.AmountOfCoins;
                 var usdVal = amount * lastValue;
-                str.AppendFormat("{0} value: {1} amount: {2}, usdval: {3}", coinDate.CoinName, lastValue, amount,
-                    usdVal);
-                str.AppendLine();
+                str.AppendFormat("   {0} value/amount/usdVal   ({1}) / ({2}) / ({3}) | ", coinDate.CoinName, Math.Round(lastValue,3), Math.Round(amount,3), Math.Round(usdVal,3));
+            
             }
+
+            str.Append("USD amount: " + Math.Round(Coins[CoinName.USD].AmountOfCoins,3));
 
             return str.ToString();
             

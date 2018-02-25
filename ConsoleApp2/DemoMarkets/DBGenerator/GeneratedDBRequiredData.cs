@@ -39,7 +39,7 @@ namespace SmartCoin
             this.intervalInSeconds = intervalInSeconds;
 
             double totalSeconds =lastDate.Subtract(firstDate).TotalSeconds;
-            amount = (int)totalSeconds/IntervalInSeconds;
+            amount = (int)totalSeconds/IntervalInSeconds+1;
             LastDate = lastDate;
         }
 

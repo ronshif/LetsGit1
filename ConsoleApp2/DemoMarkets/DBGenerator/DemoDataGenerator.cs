@@ -15,7 +15,7 @@ namespace SmartCoin
             Dictionary<SiteName, ExchangeSite> sites = new Dictionary<SiteName, ExchangeSite>();
             foreach (var siteName in data.SupportedSites)
             {
-                Dictionary<CoinName, FullCoinData> fullConsData = new Dictionary<CoinName, FullCoinData>();
+                Dictionary<CoinName, FullCoinData> fullCoinsData = new Dictionary<CoinName, FullCoinData>();
                 
                 foreach (var startingCoin in data.StartingCoinsValues)
                 {
@@ -23,12 +23,13 @@ namespace SmartCoin
                     List<CoinInfo> generatedCoins = GenerateCoins(startingCoin.Value, data.Amount,data.IntervalInSeconds,data.FirstDate);
                     coinData.CoinHistory = generatedCoins;
                     coinData.CoinName = startingCoin.Key;
-                    fullConsData.Add(coinData.CoinName, coinData);
+                    fullCoinsData.Add(coinData.CoinName, coinData);
                 }
+                fullCoinsData.Add(CoinName.USD,new FullCoinData());
 
                 var coinsOfInterest = data.StartingCoinsValues.Select(x => x.Value.coinType).ToList();
                 ExchangeSite site = new ExchangeSite(siteName, null, coinsOfInterest);
-                site.Coins = fullConsData;
+                site.Coins = fullCoinsData;
                 sites.Add(siteName, site);
             }
 

@@ -39,7 +39,7 @@ namespace SmartCoin
             this.sitesOfInterest = sitesOfInterest;
             this.coinsOfInterest = coinsOfInterest;
 
-            Dictionary<SiteName, Dictionary<CoinName, List<CoinInfo>>> coinsHistory = exchangeServices.GetCoinsHistory(sitesOfInterest, coinsOfInterest);
+         //   Dictionary<SiteName, Dictionary<CoinName, List<CoinInfo>>> coinsHistory = exchangeServices.GetCoinsHistory(sitesOfInterest, coinsOfInterest);
             Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> currentCoinsState = exchangeServices.GetCurrentCoinsState(sitesOfInterest, coinsOfInterest);
 
             foreach (SiteName siteName in sitesOfInterest)
@@ -47,8 +47,7 @@ namespace SmartCoin
                 ExchangeSite site = new ExchangeSite(siteName, this.exchangeServices,coinsOfInterest);
                 foreach (CoinName coinName in coinsOfInterest)
                 {
-                    site.Coins[coinName].CoinHistory = coinsHistory[siteName][coinName];
-
+                 //   site.Coins[coinName].CoinHistory = coinsHistory[siteName][coinName];
                     site.Coins[coinName].AmountOfCoins = exchangeServices.GetCurrentAmounts(siteName, coinName);
                 }
                 Sites.Add(siteName, site);

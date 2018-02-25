@@ -25,6 +25,12 @@ namespace SmartCoin
             throw new NotImplementedException();
         }
 
+        public bool DoCoinAction(SiteName siteName, CoinName coinName, BitActionType action, double amountOfCoins,
+            out double newCoinAmount, out double newUsdAmount)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DoCoinAction(SiteName site, CoinName coinName, BitActionType buy, double amountOfCoins)
         {
             throw new NotImplementedException();

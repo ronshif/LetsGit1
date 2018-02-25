@@ -16,7 +16,7 @@ namespace SmartCoin
 
 
         public SitesManager DemoSitesManager { get => demoSitesManager; set => demoSitesManager = value; }
-        public DateTime CurrentTime { get => currentTimeSimulation; set => currentTimeSimulation = value; }
+        public DateTime Time { get => currentTimeSimulation; set => currentTimeSimulation = value; }
 
         public ExchangesServicesSimulator()
         {
@@ -39,8 +39,8 @@ namespace SmartCoin
                 generatedDB[siteName].Coins[coinName].AmountOfCoins = amount;
             }
 
-            demoSitesManager = new SitesManager() { Sites = generatedDB };
-            CurrentTime = generatedDBRequirements.FirstDate;
+            demoSitesManager = new SitesManager {Sites = generatedDB};
+            Time = generatedDBRequirements.FirstDate;
             FirstDate = generatedDBRequirements.FirstDate;
             LastDate = generatedDBRequirements.LastDate;
             Intervals = generatedDBRequirements.IntervalInSeconds;
@@ -80,8 +80,58 @@ namespace SmartCoin
             throw new NotImplementedException();
         }
 
-        public bool DoCoinAction(SiteName siteName, CoinName coinName, BitActionType action, double amountOfCoins)
+        public bool DoCoinAction(SiteName siteName, CoinName coinName, BitActionType action, double amountOfCoins,out double newCoinAmount,out double newUsdAmount)
         {
+            var coinFullData = this.demoSitesManager.GetExchangeSite(siteName).GetCoinFullData(coinName);
+            var usdCoinFullData = this.demoSitesManager.GetExchangeSite(siteName).GetCoinFullData(CoinName.USD);
+
+            var coinInfo = GetCurrentCoin(siteName, coinName);
+
+            double previousCoinAmount = newCoinAmount =  GetCurrentAmounts(siteName, coinName);
+            double previousUsdAmount = newUsdAmount = GetCurrentAmounts(siteName, CoinName.USD);
+            Console.WriteLine("In simulated server - do action");
+            if (action == BitActionType.Sell)
+            {
+                if (amountOfCoins == double.MaxValue)
+                {
+                    amountOfCoins = coinFullData.AmountOfCoins;
+                }
+
+                if (amountOfCoins <= 0)
+                {
+                    Console.WriteLine("In simulated server: Not enough/nothing to sell {0} {1} {2}", siteName, coinName, coinFullData.AmountOfCoins, amountOfCoins);
+                    return false;
+                }
+
+                usdCoinFullData.AmountOfCoins += amountOfCoins * coinInfo.val;
+                coinFullData.AmountOfCoins -= amountOfCoins;
+            }
+
+            if (action == BitActionType.Buy)
+            {
+                
+                if (amountOfCoins == double.MaxValue)
+                {
+                    amountOfCoins = usdCoinFullData.AmountOfCoins / GetCurrentCoin(siteName, coinName).val;
+                }
+
+                var usdVal = amountOfCoins * coinInfo.val;
+                if (usdVal > usdCoinFullData.AmountOfCoins)
+                {
+                    Console.WriteLine("In simulated server: Not enough/nothing to buy site:{0} coin:{1} {2} {3}", siteName, coinName, coinFullData.AmountOfCoins, amountOfCoins);
+                    return false;
+                }
+
+                usdCoinFullData.AmountOfCoins -= usdVal;
+                coinFullData.AmountOfCoins += amountOfCoins;
+
+            }
+
+            newCoinAmount = coinFullData.AmountOfCoins;
+            newUsdAmount = usdCoinFullData.AmountOfCoins;
+
+            Console.WriteLine("In simulated server: Action performed, previous values {0} {1}, new values{2} {3}", previousCoinAmount,previousUsdAmount,newCoinAmount,newUsdAmount);
+
             return true;
         }
 
@@ -110,6 +160,11 @@ namespace SmartCoin
             return dic;
         }
 
+        public CoinInfo GetCurrentCoin(SiteName siteName, CoinName coinName)
+        {
+            return demoSitesManager.GetExchangeSite(siteName).GetCoinFullData(coinName).GetCoinAtTime(currentTimeSimulation);
+        }
+
         public Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> GetCurrentCoinsState(List<SiteName> sitesOfInterest, List<CoinName> coinsOfInterest)
         {
             Dictionary<SiteName, Dictionary<CoinName, CoinInfo>> allCoins = new Dictionary<SiteName, Dictionary<CoinName, CoinInfo>>();
@@ -125,6 +180,11 @@ namespace SmartCoin
                 allCoins[siteName] = coinsOfOneSite;
             }
             return allCoins;
+        }
+
+        public void PrintAllData(SiteName siteName,CoinName coinName)
+        {
+            DemoSitesManager.Sites[siteName].GetCoinFullData(coinName).PrintAllData();
         }
 
         public void PrintAllData()

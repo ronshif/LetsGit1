@@ -9,33 +9,36 @@ namespace SmartCoin
         public void RunnerSimulation(IAlgorithm algorithm)
         {
             ExchangesServicesSimulator exchangesServicesSimulator = new ExchangesServicesSimulator();
-            exchangesServicesSimulator.PrintAllData();
-            return;
+//            exchangesServicesSimulator.PrintAllData(SiteName.BitFinex,CoinName.Ripple);
             ISitesManager sitesManager = new SitesManager(exchangesServicesSimulator);
             sitesManager.Init(algorithm.SitesOfInterest,algorithm.CoinsOfinterest);
             algorithm.AllSitesManager = sitesManager;
 
-            DateTime currentTime = exchangesServicesSimulator.FirstDate;
+            DateTime simulatedCurrentTime = exchangesServicesSimulator.FirstDate;
             int step = 0;
-            int maxSteps = 20;
-            while (currentTime< exchangesServicesSimulator.LastDate && step++< maxSteps)
+            int maxSteps = Int32.MaxValue;
+
+            while (simulatedCurrentTime < exchangesServicesSimulator.LastDate && step++< maxSteps)
             {
-                exchangesServicesSimulator.CurrentTime = currentTime;
-                Console.WriteLine(currentTime + algorithm.GetRelevantDataForOutput());
-                EvaluateAlgorithmLogic(sitesManager, algorithm);
-                currentTime = currentTime.AddSeconds(exchangesServicesSimulator.Intervals);
+                exchangesServicesSimulator.Time = simulatedCurrentTime;
+                Console.WriteLine(simulatedCurrentTime + algorithm.GetRelevantDataForOutput());
+                var evaluatedAction = EvaluateAlgorithmLogic(sitesManager, algorithm);
+                if (evaluatedAction.Action != BitActionType.Nothing)
+                {
+                    Console.WriteLine(evaluatedAction);
+                }
+
+                simulatedCurrentTime = simulatedCurrentTime.AddSeconds(exchangesServicesSimulator.Intervals);
             }
         }
 
-        private void EvaluateAlgorithmLogic(ISitesManager sitesManager, IAlgorithm algorithm)
+        private BitAction EvaluateAlgorithmLogic(ISitesManager sitesManager, IAlgorithm algorithm)
         {
             sitesManager.CheckForUpdates();
             BitAction recommendedAction = algorithm.GetRecommendedAction();
             sitesManager.DoBitAction(recommendedAction);
-            if (recommendedAction.Action != BitActionType.Nothing)
-            {
-                Console.WriteLine(algorithm.GetRecommendedAction());
-            }
+
+            return recommendedAction;
         }
 
         public void RunnerReal(IAlgorithm algorithm, int steps)
