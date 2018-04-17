@@ -19,6 +19,7 @@ namespace SmartCoin
                 
                 foreach (var startingCoin in data.StartingCoinsValues)
                 {
+                    //here
                     FullCoinData coinData = new FullCoinData();
                     List<CoinInfo> generatedCoins = GenerateCoins(startingCoin.Value, data.Amount,data.IntervalInSeconds,data.FirstDate);
                     coinData.CoinHistory = generatedCoins;
@@ -58,6 +59,7 @@ namespace SmartCoin
             }
 
             return list;
+            //here
         }
 
     }
