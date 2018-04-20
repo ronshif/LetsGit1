@@ -2,5 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/ConsoleApp2/obj
+
+/.vs/ConsoleApp2/v15/Server/sqlite3/db.lock
 /.vs/ConsoleApp2/v15/Server/sqlite3
+/ConsoleApp2/obj
+
