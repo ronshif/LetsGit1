@@ -12,6 +12,8 @@ namespace SmartCoin
 
             //change2
             IAlgorithm ripple = new RandomAlgorithm();
+
+            //change3
             run.RunnerSimulation(ripple);
             //helooppp
             Console.WriteLine("helloooo");
