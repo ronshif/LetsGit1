@@ -6,6 +6,7 @@ namespace SmartCoin
 {
     public class Runner
     {
+		//check
         public void RunnerSimulation(IAlgorithm algorithm)
         {
             ExchangesServicesSimulator exchangesServicesSimulator = new ExchangesServicesSimulator();
