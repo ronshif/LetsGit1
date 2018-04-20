@@ -7,7 +7,9 @@ namespace SmartCoin
     {
         static void Main(string[] args)
         {
+
             //Vs_ronshif
+
             Runner run = new Runner();
 
             //change2
