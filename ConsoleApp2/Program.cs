@@ -10,6 +10,7 @@ namespace SmartCoin
             //Vs_ronshif
             Runner run = new Runner();
 
+            //change2
             IAlgorithm ripple = new RandomAlgorithm();
             run.RunnerSimulation(ripple);
             //helooppp
