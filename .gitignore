@@ -7,3 +7,5 @@
 /.vs/ConsoleApp2/v15/Server/sqlite3
 /ConsoleApp2/obj
 
+/ConsoleApp2/bin/Debug/netcoreapp2.0
+/.vs/ConsoleApp2/v15
